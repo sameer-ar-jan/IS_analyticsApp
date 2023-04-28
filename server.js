@@ -88,7 +88,7 @@ app.delete("/products/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-const uri = "mongodb://34.170.24.112:27017/myDB";
+const uri = "mongodb://35.202.227.131:27017/myDB";
 mongoose.set("strictQuery", false);
 mongoose
   .connect(uri)
