@@ -91,7 +91,7 @@ app.delete("/products/:id", async (req, res) => {
 const uri = "mongodb://35.202.227.131:27017/myDB";
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(uri)
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("connected to MongoDB");
     app.listen(3000, () => {
