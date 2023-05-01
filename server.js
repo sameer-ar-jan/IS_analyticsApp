@@ -88,10 +88,11 @@ app.delete("/products/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-const uri = "mongodb://35.225.139.128:27017/myDB";
+const uri =
+  "mongodb+srv://sameer:abc1234@cluster0.eemph1l.mongodb.net/Node-test?retryWrites=true&w=majority";
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(uri)
   .then(() => {
     console.log("connected to MongoDB");
     app.listen(3000, () => {
