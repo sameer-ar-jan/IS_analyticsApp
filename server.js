@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const Product = require("./models/productModel");
 const app = express();
+const numCPUs = require("os").cpus().length;
+const cluster = require("cluster");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -88,17 +90,32 @@ app.delete("/products/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-const uri =
-  "mongodb+srv://sameer:abc1234@cluster0.eemph1l.mongodb.net/Node-test?retryWrites=true&w=majority";
-mongoose.set("strictQuery", false);
-mongoose
-  .connect(uri)
-  .then(() => {
-    console.log("connected to MongoDB");
-    app.listen(3000, () => {
-      console.log(`Node API app is running on port 3000`);
-    });
-  })
-  .catch((error) => {
-    console.log(error);
+
+if (cluster.isMaster) {
+  // Fork workers
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died`);
   });
+} else {
+  // Workers can share any TCP connection
+  // In this case, it is an Express app
+  const uri =
+    "mongodb+srv://sameer:abc1234@cluster0.eemph1l.mongodb.net/Node-test?retryWrites=true&w=majority";
+  mongoose.set("strictQuery", false);
+  mongoose
+    .connect(uri)
+    .then(() => {
+      console.log("connected to MongoDB");
+      app.listen(3000, () => {
+        console.log(`Node API app is running on port 3000`);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+// This example creates an Express app that defines routes for creating, reading, updating, and deleting resources. It also includes logic for creating a cluster of worker processes that share a single TCP connection to listen for incoming requests. Note that this code assumes you have defined your MongoDB connection string and any relevant models/controllers.
