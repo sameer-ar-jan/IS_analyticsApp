@@ -10,6 +10,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
   res.send("Hello NODE API");
+   console.log('Received request:', req.method, req.url)
+  // res.send('Hello, World!')
 });
 
 app.get("/blog", (req, res) => {
