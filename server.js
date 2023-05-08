@@ -112,7 +112,7 @@ if (cluster.isMaster) {
     .connect(uri)
     .then(() => {
       console.log("connected to MongoDB");
-      app.listen(3000, () => {
+      app.listen(3000, "0.0.0.0", () => {
         console.log(`Node API app is running on port 3000`);
       });
     })
