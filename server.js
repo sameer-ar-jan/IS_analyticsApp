@@ -4,8 +4,7 @@ const Product = require("./models/productModel");
 const app = express();
 const numCPUs = require("os").cpus().length;
 const cluster = require("cluster");
-const IP_ADDRESS = process.env.IP_ADDRESS || "0.0.0.0"; // use environment variable or default to 0.0.0.0 (all network interfaces)
-const PORT = process.env.PORT || 3000;
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -113,8 +112,8 @@ if (cluster.isMaster) {
     .connect(uri)
     .then(() => {
       console.log("connected to MongoDB");
-      app.listen(PORT, IP_ADDRESS, () => {
-        console.log(`Server running at http://${IP_ADDRESS}:${PORT}`);
+      app.listen(3000, () => {
+        console.log(`Node API app is running on port 3000`);
       });
     })
     .catch((error) => {
